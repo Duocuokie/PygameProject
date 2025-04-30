@@ -8,6 +8,7 @@ import random
 from player import Player
 from enemy import Enemy
 from projectile import Projectile
+from camera import Camera
 
 pygame.init()
 
@@ -26,9 +27,10 @@ pygame.display.set_caption("Game")
 clock = pygame.time.Clock()
 
 
-        
+
 
 player = Player()
+playerCam = Camera()
 
 projectiles = pygame.sprite.Group()
 enemys = pygame.sprite.Group()
@@ -51,10 +53,14 @@ def main():
 
             if event.type == pygame.QUIT:
                 run = False
-        cam = -player.position + (400, 300)
-        player.update(cam, delta)
-        enemys.update(cam, player.rect.center, delta)
-        projectiles.update(cam, delta)
+
+        target = (player.position + Vector2(pygame.mouse.get_pos() - Vector2(WIDTH//2, HEIGHT//2) + player.position))/2
+        playerCam.update(target, (WIDTH//2, HEIGHT//2))
+        player.update(playerCam.position, delta)
+        enemys.update(playerCam.position, player.rect.center, delta)
+        projectiles.update(playerCam.position, delta)
+
+
         if pygame.sprite.groupcollide(enemys, projectiles, True, True, pygame.sprite.collide_circle_ratio(1.2)):
             erm = Vector2(1000, 0).rotate(random.uniform(0, 360.0))
             guyagain = Enemy(erm + player.position)
