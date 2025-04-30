@@ -7,4 +7,4 @@ class Camera():
         self.position = Vector2(0, 0)
 
     def update(self, targetPos, halfScreenSize):
-        self.position = self.position.lerp(-targetPos + (halfScreenSize), 0.5)
+        self.position = self.position.lerp(-targetPos + (halfScreenSize), 0.1)

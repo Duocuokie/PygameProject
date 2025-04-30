@@ -17,7 +17,7 @@ Clock = pygame.time.Clock()
 
 
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 960, 720
 FPS = 60
 
 
@@ -29,17 +29,18 @@ clock = pygame.time.Clock()
 
 
 
-player = Player()
-playerCam = Camera()
-
-projectiles = pygame.sprite.Group()
-enemys = pygame.sprite.Group()
-
-for i in range(3):
-    guy = Enemy((400, 200))
-    enemys.add(guy)
 
 def main():
+    player = Player()
+    playerCam = Camera()
+    playerCam.position += (WIDTH//2, HEIGHT//2)
+
+    projectiles = pygame.sprite.Group()
+    enemys = pygame.sprite.Group()
+
+    for i in range(3):
+        guy = Enemy((400, 200))
+        enemys.add(guy)
     run = True
     while run:
         delta = Clock.tick(FPS)/1000
@@ -52,9 +53,9 @@ def main():
 
 
             if event.type == pygame.QUIT:
-                run = False
+                run = False 
 
-        target = (player.position + Vector2(pygame.mouse.get_pos() - Vector2(WIDTH//2, HEIGHT//2) + player.position))/2
+        target = (player.position * 4 + Vector2(pygame.mouse.get_pos() - Vector2(WIDTH//2, HEIGHT//2) + player.position))/5
         playerCam.update(target, (WIDTH//2, HEIGHT//2))
         player.update(playerCam.position, delta)
         enemys.update(playerCam.position, player.rect.center, delta)
