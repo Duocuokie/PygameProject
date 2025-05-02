@@ -55,7 +55,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False 
 
-        target = (player.position * 4 + Vector2(pygame.mouse.get_pos() - Vector2(WIDTH//2, HEIGHT//2) + player.position))/5
+        target = (player.position * 3 + Vector2(pygame.mouse.get_pos() - Vector2(WIDTH//2, HEIGHT//2) + player.position))/4
         playerCam.update(target, (WIDTH//2, HEIGHT//2))
         player.update(playerCam.position, delta)
         enemys.update(playerCam.position, player.rect.center, delta)
