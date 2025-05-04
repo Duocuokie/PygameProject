@@ -2,14 +2,14 @@ import pygame
 from pygame.locals import *
 from pygame.math import *
 import math
-from gameObject import GameObject
+from entity import Entity
 
-class Enemy(GameObject):
+class Enemy(Entity):
     def __init__(self, pos):
         super().__init__()
 
-        self.image = pygame.Surface((32, 32))
-        self.image.fill((220, 25, 30))
+        self.sprite = pygame.Surface((32, 32))
+        self.sprite.fill((220, 25, 30))
         self.rect = self.image.get_rect()
         
         self.rect.center = pos
@@ -36,4 +36,4 @@ class Enemy(GameObject):
         self.findPlayer(playerPos)
         self.applyAccel(self.direction, delta)
         self.position += self.velocity
-        self.rect.center = self.position + camPos
+        self.updateImage(camPos)
