@@ -2,16 +2,16 @@ import pygame
 from pygame.locals import *
 from pygame.math import *
 import math
-from gameObject import GameObject
+from entity import Entity
 
 PLAYERIMAGE = pygame.image.load("textures/Player.png")
 
-class Player(GameObject):
+class Player(Entity):
     def __init__(self):
         super().__init__()
         self.position = Vector2(0, 0)
 
-        self.image = PLAYERIMAGE
+        self.sprite = PLAYERIMAGE
         self.rect = self.image.get_rect()
         self.rect.center = self.position
 
@@ -43,14 +43,10 @@ class Player(GameObject):
             self.direction = self.direction.normalize()
             self.applyAccel(self.direction, delta)
 
-        #self.rect.move_ip(self.velocity[0], self.velocity[1])
+
         self.position += self.velocity
-        self.rect.center = self.position + camPos
+
 
         self.mouseDir = (Vector2(pygame.mouse.get_pos()) - Vector2(self.rect.center))
         self.rotation = -math.degrees(math.atan2(self.mouseDir[1], self.mouseDir[0]))
-        prevCenter = self.rect.center
-        self.image = PLAYERIMAGE
-        self.image = pygame.transform.rotate(self.image, self.rotation)
-        self.rect = self.image.get_rect()
-        self.rect.center = prevCenter
+        self.updateImage(camPos)
