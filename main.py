@@ -82,7 +82,7 @@ def main():
             if enemySoftCols:
                 if e != enemySoftCols[0]:
                     e.softCollide(enemySoftCols[0])
-                elif len(enemySoftCols) >1 :
+                elif len(enemySoftCols) > 1:
                     e.softCollide(enemySoftCols[1])
         #Enemy vs Player Projectiles
         enemyCols = pygame.sprite.groupcollide(enemys, projectiles, False, False, pygame.sprite.collide_circle_ratio(1.25))
@@ -106,9 +106,11 @@ def main():
         playerCols = pygame.sprite.spritecollide(player, enemys, False, pygame.sprite.collide_circle)
         if playerCols:
             e = playerCols[0]
+            
             player.damage(e.atk, e)
             if player.hp == 0:
                 run = False
+                
 
 
         #--Rendering--

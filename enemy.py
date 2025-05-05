@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from pygame.math import *
 import math
+import random
 from entity import Entity
 
 class Enemy(Entity):
@@ -21,7 +22,7 @@ class Enemy(Entity):
         self.maxSpeed = 260
         self.acceleration = 3000
 
-        self.kb = 630
+        self.kb = 1000
 
     def findPlayer(self, playerPos):
         if Vector2(self.rect.center).distance_squared_to(Vector2(playerPos)) > 0:
@@ -42,6 +43,6 @@ class Enemy(Entity):
     def softCollide(self, enemy):
         scDir = Vector2(enemy.position - self.position)
         if scDir == Vector2(0, 0):
-            scDir = Vector2(1, 0)
+            scDir = Vector2(1, 0).rotate(random.uniform(0, 360.0))
         else: scDir.normalize()
         self.velocity += -scDir * 8

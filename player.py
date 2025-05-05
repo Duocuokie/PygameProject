@@ -24,7 +24,8 @@ class Player(Entity):
         self.acceleration = 2900
         self.friction = 1700
 
-        self.hp = 20
+        self.hp = 2000000
+        self.invincTime = 1000
 
     def applyAccel(self, dir, delta):
         self.velocity = self.velocity.move_towards(dir * self.maxSpeed, self.acceleration * delta)
@@ -33,6 +34,18 @@ class Player(Entity):
     def applyFriction(self, delta):
         self.velocity = self.velocity.move_towards(Vector2(0, 0), self.friction * delta)
 
+    def damage(self, dmg, damager):
+        if self.lastHitTime + self.invincTime < pygame.time.get_ticks():
+            pygame.time.wait(50)
+            self.lastHitTime = pygame.time.get_ticks()
+            self.hp = clamp(self.hp -  dmg, 0, 99999)
+            dmgDir = Vector2(damager.position - self.position).normalize()
+            print(dmgDir)
+            self.velocity += dmgDir * -damager.kb * self.kbResist
+            
+        if self.hp == 0: 
+           
+            self.die()
 
     def update(self, camPos, delta):
         keys = pygame.key.get_pressed()

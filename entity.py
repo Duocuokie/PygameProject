@@ -8,21 +8,26 @@ from gameObject import GameObject
 class Entity(GameObject):
     def __init__(self):
         super().__init__()
-        self.hp = 10
         self.atk = 10
+
+        self.hp = 10
         self.kbResist = 1
         self.layer = 0
+        self.invincTime = 100
+        self.lastHitTime = 0
 
         self.velocity = Vector2(0.0, 0.0)
 
 
 
     def damage(self, dmg, damager):
-        self.hp = clamp(self.hp -  dmg, 0, 99999)
-        dmgDir = Vector2(damager.position - self.position).normalize()
-        print(dmgDir)
-        self.velocity += dmgDir * -500 * self.kbResist
-        
+        if self.lastHitTime + self.invincTime < pygame.time.get_ticks():
+            self.lastHitTime = pygame.time.get_ticks()
+            self.hp = clamp(self.hp -  dmg, 0, 99999)
+            dmgDir = Vector2(damager.position - self.position).normalize()
+            print(dmgDir)
+            self.velocity += dmgDir * -damager.kb * self.kbResist
+            
         if self.hp == 0: 
            
             self.die()

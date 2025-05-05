@@ -20,7 +20,7 @@ class Projectile(GameObject):
 
         self.damage = 5
         self.pierce = 0
-        self.kb = 500
+        self.kb = 600
 
         
     def update(self, camPos, delta):
