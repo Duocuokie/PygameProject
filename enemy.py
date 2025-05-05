@@ -11,16 +11,17 @@ class Enemy(Entity):
         self.sprite = pygame.Surface((32, 32))
         self.sprite.fill((220, 25, 30))
         self.rect = self.image.get_rect()
+        self.radius = 12
         
         self.rect.center = pos
         self.position = pos
-
         self.direction = Vector2(0, 0)
         
-        self.radius = 12
         self.velocity = Vector2(0.0, 0.0)
-        self.maxSpeed = 3.5
-        self.acceleration = 60
+        self.maxSpeed = 260
+        self.acceleration = 3000
+
+        self.kb = 630
 
     def findPlayer(self, playerPos):
         if Vector2(self.rect.center).distance_squared_to(Vector2(playerPos)) > 0:
@@ -35,5 +36,12 @@ class Enemy(Entity):
     def update(self, camPos, playerPos, delta):
         self.findPlayer(playerPos)
         self.applyAccel(self.direction, delta)
-        self.position += self.velocity
+        self.position += self.velocity * delta
         self.updateImage(camPos)
+
+    def softCollide(self, enemy):
+        scDir = Vector2(enemy.position - self.position)
+        if scDir == Vector2(0, 0):
+            scDir = Vector2(1, 0)
+        else: scDir.normalize()
+        self.velocity += -scDir * 8

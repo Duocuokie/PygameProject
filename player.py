@@ -20,9 +20,11 @@ class Player(Entity):
         self.mouseDir = [0, 0]
 
         self.velocity = Vector2(0.0, 0.0)
-        self.maxSpeed = 6
-        self.acceleration = 60
-        self.friction = 30
+        self.maxSpeed = 400
+        self.acceleration = 2900
+        self.friction = 1700
+
+        self.hp = 20
 
     def applyAccel(self, dir, delta):
         self.velocity = self.velocity.move_towards(dir * self.maxSpeed, self.acceleration * delta)
@@ -30,6 +32,7 @@ class Player(Entity):
 
     def applyFriction(self, delta):
         self.velocity = self.velocity.move_towards(Vector2(0, 0), self.friction * delta)
+
 
     def update(self, camPos, delta):
         keys = pygame.key.get_pressed()
@@ -44,7 +47,7 @@ class Player(Entity):
             self.applyAccel(self.direction, delta)
 
 
-        self.position += self.velocity
+        self.position += self.velocity*delta
 
 
         self.mouseDir = (Vector2(pygame.mouse.get_pos()) - Vector2(self.rect.center))

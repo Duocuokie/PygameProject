@@ -75,33 +75,43 @@ def main():
         target = (player.position * 3 + Vector2(pygame.mouse.get_pos() - Vector2(WIDTH//2, HEIGHT//2) + player.position))/4
         playerCam.update(target, (WIDTH//2, HEIGHT//2))
 
-        #Collisions
+        #--Collisions--
+        #enemy soft collision
+        for e in enemys:
+            enemySoftCols = pygame.sprite.spritecollide(e, enemys, False, pygame.sprite.collide_circle)
+            if enemySoftCols:
+                if e != enemySoftCols[0]:
+                    e.softCollide(enemySoftCols[0])
+                elif len(enemySoftCols) >1 :
+                    e.softCollide(enemySoftCols[1])
         #Enemy vs Player Projectiles
-        collisions = pygame.sprite.groupcollide(enemys, projectiles, False, False, pygame.sprite.collide_circle_ratio(1.25))
-        if collisions:
-            print(collisions)
+        enemyCols = pygame.sprite.groupcollide(enemys, projectiles, False, False, pygame.sprite.collide_circle_ratio(1.25))
+        if enemyCols:
             usedProj = []
-            for e in collisions:
-                p = collisions[e][0]
-                print(e)
-                print(collisions[e] )
+            for e in enemyCols:
+                p = enemyCols[e][0]
                 if p not in usedProj:
-                    e.damage(5, 1)
+                    e.damage(5, p)
+                    print(p.pierce)
                     if p.pierce <= 0:
                         usedProj.append(p)
                         p.kill()
                     else:
                         p.pierce -= 1
-                collisions[e][0].kill()
+        
             erm = Vector2(1000, 0).rotate(random.uniform(0, 360.0))
             guyagain = Enemy(erm + player.position)
             enemys.add(guyagain)
         #player vs Enemy
-        if pygame.sprite.spritecollide(player, enemys, False, pygame.sprite.collide_circle):
-            run = False
+        playerCols = pygame.sprite.spritecollide(player, enemys, False, pygame.sprite.collide_circle)
+        if playerCols:
+            e = playerCols[0]
+            player.damage(e.atk, e)
+            if player.hp == 0:
+                run = False
 
-        #Rendering
-        screen.fill((17, 7, 32))
+
+        #--Rendering--
 
         blitList = []
 
@@ -124,6 +134,10 @@ def main():
         screen.blit(player.image, player.rect)
         pygame.display.update()
 
+
+        
+
+#fail save if wrong file is run
 if __name__ == '__main__':
     main()
 

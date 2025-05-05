@@ -11,13 +11,16 @@ class Projectile(GameObject):
         self.sprite.fill((220, 175, 30))
         self.rect = self.image.get_rect()
         self.radius = 6
+
         self.rect.center = pos
         self.position = pos
         self.speed = 500
         self.angle = angle
         self.velocity = Vector2(self.speed, 0).rotate(-angle)
+
         self.damage = 5
         self.pierce = 0
+        self.kb = 500
 
         
     def update(self, camPos, delta):
