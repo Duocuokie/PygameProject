@@ -7,7 +7,7 @@ import random
 
 from player import Player
 from enemy import Enemy
-from projectile import Projectile
+from playerProj1 import PlayerProj1
 from camera import Camera
 
 pygame.init()
@@ -15,8 +15,7 @@ pygame.init()
 
 Clock = pygame.time.Clock()
 
-
-
+PLAYERFIRE = pygame.USEREVENT + 1
 WIDTH, HEIGHT = 960, 720
 HWIDTH, HHIEGHT = WIDTH//2, HEIGHT//2
 FPS = 60
@@ -37,6 +36,7 @@ def main():
 
     #Setup player
     player = Player()
+    player.event = PLAYERFIRE
     playerCam = Camera()
     playerCam.position += (WIDTH//2, HEIGHT//2)
 
@@ -55,10 +55,10 @@ def main():
         for event in pygame.event.get():
 
             #spawn projectile  needs rework
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed()[0]:
-                    bal = Projectile(player.rotation, player.position.copy())
-                    projectiles.add(bal)
+            if event.type == PLAYERFIRE:
+                bal = PlayerProj1(player.rotation, player.position.copy(), player.charge)
+                print(player.charge)
+                projectiles.add(bal)
 
             #quitting
             if event.type == pygame.QUIT:
