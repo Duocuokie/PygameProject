@@ -18,7 +18,7 @@ class Projectile(GameObject):
         self.angle = angle
         self.velocity = Vector2(self.speed, 0).rotate(-angle)
 
-        self.damage = 5
+        self.atk = 5
         self.pierce = 0
         self.kb = 600
         self.layer = 0

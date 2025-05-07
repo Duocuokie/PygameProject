@@ -38,7 +38,7 @@ def main():
     player = Player()
     player.event = PLAYERFIRE
     playerCam = Camera()
-    playerCam.position += (WIDTH//2, HEIGHT//2)
+    playerCam.position += (HWIDTH, HHIEGHT)
 
     #setup groups
     projectiles = pygame.sprite.Group()
@@ -72,8 +72,8 @@ def main():
         projectiles.update(playerCam.position, delta)
 
         #setting camera to go between player and mouse
-        target = (player.position * 3 + Vector2(pygame.mouse.get_pos() - Vector2(WIDTH//2, HEIGHT//2) + player.position))/4
-        playerCam.update(target, (WIDTH//2, HEIGHT//2))
+        target = (player.position * 3 + Vector2(pygame.mouse.get_pos() - Vector2(HWIDTH, HHIEGHT) + player.position))/4
+        playerCam.update(target, (HWIDTH, HHIEGHT))
 
         #--Collisions--
         #enemy soft collision
@@ -91,7 +91,7 @@ def main():
             for e in enemyCols:
                 p = enemyCols[e][0]
                 if p not in usedProj:
-                    e.damage(5, p)
+                    e.damage(p.atk, p)
                     print(p.pierce)
                     if p.pierce <= 0:
                         usedProj.append(p)
