@@ -8,6 +8,7 @@ from entity import Entity
 class Enemy(Entity):
     def __init__(self, pos):
         super().__init__()
+        self.id = 0
 
         self.sprite = pygame.Surface((32, 32))
         self.sprite.fill((220, 25, 30))

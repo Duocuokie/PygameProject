@@ -9,6 +9,8 @@ from player import Player
 from enemy import Enemy
 from playerProj1 import PlayerProj1
 from camera import Camera
+from enemySpawner import EnemySpawner
+
 
 pygame.init()
 
@@ -30,7 +32,7 @@ clock = pygame.time.Clock()
 
 
 
-
+gex = EnemySpawner()
 
 def main():
 
