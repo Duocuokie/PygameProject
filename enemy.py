@@ -6,7 +6,7 @@ import random
 from entity import Entity
 
 class Enemy(Entity):
-    def __init__(self, pos):
+    def __init__(self, pos, event):
         super().__init__()
         self.id = 0
 
@@ -24,6 +24,7 @@ class Enemy(Entity):
         self.acceleration = 3000
 
         self.kb = 1000
+        self.event = event
 
     def findPlayer(self, playerPos):
         if Vector2(self.rect.center).distance_squared_to(Vector2(playerPos)) > 0:
@@ -35,15 +36,19 @@ class Enemy(Entity):
     def applyAccel(self, dir, delta):
         self.velocity = self.velocity.move_towards(dir * self.maxSpeed, self.acceleration * delta)
 
-    def update(self, camPos, playerPos, delta):
-        self.findPlayer(playerPos)
-        self.applyAccel(self.direction, delta)
-        self.position += self.velocity * delta
-        self.updateImage(camPos)
-
     def softCollide(self, enemy):
         scDir = Vector2(enemy.position - self.position)
         if scDir == Vector2(0, 0):
             scDir = Vector2(1, 0).rotate(random.uniform(0, 360.0))
         else: scDir.normalize()
         self.velocity += -scDir * 8
+
+    def die(self):
+        pygame.event.post(pygame.event.Event(self.event, {"enemy" : self}))
+        self.kill()
+
+    def update(self, camPos, playerPos, delta):
+        self.findPlayer(playerPos)
+        self.applyAccel(self.direction, delta)
+        self.position += self.velocity * delta
+        self.updateImage(camPos)

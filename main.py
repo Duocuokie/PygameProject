@@ -6,7 +6,6 @@ import time
 import random
 
 from player import Player
-from enemy import Enemy
 from playerProj1 import PlayerProj1
 from camera import Camera
 from enemySpawner import EnemySpawner
@@ -18,6 +17,9 @@ pygame.init()
 Clock = pygame.time.Clock()
 
 PLAYERFIRE = pygame.USEREVENT + 1
+SPAWNENEMY = pygame.USEREVENT + 2
+ENEMYDIE   = pygame.USEREVENT + 3
+
 WIDTH, HEIGHT = 960, 720
 HWIDTH, HHIEGHT = WIDTH//2, HEIGHT//2
 FPS = 60
@@ -31,14 +33,12 @@ pygame.display.set_caption("Game")
 clock = pygame.time.Clock()
 
 
-
-gex = EnemySpawner()
+eSpawner = EnemySpawner(ENEMYDIE)
 
 def main():
 
     #Setup player
-    player = Player()
-    player.event = PLAYERFIRE
+    player = Player(PLAYERFIRE)
     playerCam = Camera()
     playerCam.position += (HWIDTH, HHIEGHT)
 
@@ -46,10 +46,8 @@ def main():
     projectiles = pygame.sprite.Group()
     enemys = pygame.sprite.Group()
 
-    for i in range(3):
-        guy = Enemy((400, 200))
-        enemys.add(guy)
     
+    pygame.time.set_timer(SPAWNENEMY, 1000)
     #main loop
     run = True
     while run:
@@ -59,16 +57,27 @@ def main():
             #spawn projectile  needs rework
             if event.type == PLAYERFIRE:
                 bal = PlayerProj1(player.rotation, player.position.copy(), player.charge)
-                print(player.charge)
                 projectiles.add(bal)
+            
+            elif event.type == SPAWNENEMY:
+    
+                erm = Vector2(1000, 0).rotate(random.uniform(0, 360.0)) + player.position
+                enemys = eSpawner.spawn(erm, enemys)
+
+            elif event.type == ENEMYDIE:
+                eSpawner.entityCount[event.enemy.id] -= 1
+                print(event.enemy)
+
 
             #quitting
-            if event.type == pygame.QUIT:
+            elif event.type == pygame.QUIT:
                 run = False 
 
 
 
         #updating sprites
+    
+        
         player.update(playerCam.position, delta)
         enemys.update(playerCam.position, player.rect.center, delta)
         projectiles.update(playerCam.position, delta)
@@ -95,15 +104,14 @@ def main():
                 if p not in usedProj:
                     e.damage(p.atk, p)
                     print(p.pierce)
-                    if p.pierce <= 0:
+                    if p.pierce == None:
+                        pass
+                    elif p.pierce <= 0:
                         usedProj.append(p)
                         p.kill()
                     else:
                         p.pierce -= 1
         
-            erm = Vector2(1000, 0).rotate(random.uniform(0, 360.0))
-            guyagain = Enemy(erm + player.position)
-            enemys.add(guyagain)
         #player vs Enemy
         playerCols = pygame.sprite.spritecollide(player, enemys, False, pygame.sprite.collide_circle)
         if playerCols:

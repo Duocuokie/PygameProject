@@ -8,7 +8,7 @@ from entity import Entity
 PLAYERIMAGE = pygame.image.load("textures/Player.png")
 
 class Player(Entity):
-    def __init__(self):
+    def __init__(self, event):
         super().__init__()
         self.sprite = PLAYERIMAGE
         self.radius = 12
@@ -16,20 +16,27 @@ class Player(Entity):
         self.direction = Vector2(0, 0)
         self.mouseDir = [0, 0]
 
-        self.maxSpeed = 400
-        self.acceleration = 2900
-        self.friction = 1700
+        self.maxSpeed = 410
+        self.acceleration = 2200
+        self.friction = 1500
 
-        self.hp = 2000000
+        self.hp = 20
         self.invincTime = 1000
 
         self.charge = 0
+        self.dash = 0
         self.wasPressed = False
 
-        self.event = None
+        self.event = event
 
     def applyAccel(self, dir, delta):
-        self.velocity = self.velocity.move_towards(dir * self.maxSpeed, self.acceleration * delta)
+        speed = self.maxSpeed
+        accel = self.acceleration
+        if self.charge != 0 :
+            accel = 900
+            speed = clamp((speed - 200 - (self.charge**2)/4), 0, 99999) + 100
+        self.velocity = self.velocity.move_towards(dir * speed,  accel * delta)
+
 
 
     def applyFriction(self, delta):
@@ -51,6 +58,11 @@ class Player(Entity):
     def update(self, camPos, delta):
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
+        if self.rect.center == pygame.mouse.get_pos():
+            self.mouseDir = Vector2(1, 0)
+        else:
+            self.mouseDir = (Vector2(pygame.mouse.get_pos()) - Vector2(self.rect.center)).normalize()
+        self.rotation = -math.degrees(math.atan2(self.mouseDir[1], self.mouseDir[0]))
 
         self.direction = Vector2(0, 0)
         self.direction[0] = int(keys[K_d]) - int(keys[K_a])
@@ -58,25 +70,30 @@ class Player(Entity):
 
         
 
+        if mouse[0]:
+            self.charge += 15 * delta
+            self.wasPressed = True
+        else:
+            if self.wasPressed:
+                pygame.event.post(pygame.event.Event(self.event))
+                self.dash = self.charge
+                
+            else:
+                self.charge = 0
+            self.wasPressed = False
+
+        if self.dash > 10:
+            #self.dash = clamp(self.dash - 18 * delta, 0, 600)
+            self.dash *=0.97
+            self.velocity = (self.mouseDir * -self.dash)*25 + self.direction * (self.maxSpeed - 100)
+
         if self.direction == [0, 0]:
             self.applyFriction(delta)
         else:
             self.direction = self.direction.normalize()
             self.applyAccel(self.direction, delta)
 
-        if mouse[0]:
-            self.charge += 10 * delta
-            self.wasPressed = True
-        else:
-            if self.wasPressed:
-                pygame.event.post(pygame.event.Event(self.event))
-            else:
-                self.charge = 0
-            self.wasPressed = False
-
         self.position += self.velocity*delta
 
 
-        self.mouseDir = (Vector2(pygame.mouse.get_pos()) - Vector2(self.rect.center))
-        self.rotation = -math.degrees(math.atan2(self.mouseDir[1], self.mouseDir[0]))
         self.updateImage(camPos)
