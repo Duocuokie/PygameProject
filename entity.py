@@ -25,7 +25,6 @@ class Entity(GameObject):
             self.lastHitTime = pygame.time.get_ticks()
             self.hp = clamp(self.hp -  dmg, 0, 99999)
             dmgDir = Vector2(damager.position - self.position).normalize()
-            print(dmgDir)
             self.velocity += dmgDir * -damager.kb * self.kbResist
             
         if self.hp == 0: 

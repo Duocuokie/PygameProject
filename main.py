@@ -49,7 +49,7 @@ def main():
     enemys = pygame.sprite.Group()
 
     
-    pygame.time.set_timer(SPAWNENEMY, 1000)
+    pygame.time.set_timer(SPAWNENEMY, 500)
     #main loop
     run = True
     while run:
@@ -66,12 +66,13 @@ def main():
                 
             elif event.type == SPAWNENEMY:
     
-                erm = Vector2(1000, 0).rotate(random.uniform(0, 360.0)) + player.position
-                enemys = eSpawner.spawn(erm, enemys)
+                
+                enemys = eSpawner.spawn(player.position, enemys)
+                eSpawner.time += 1
 
             elif event.type == ENEMYDIE:
                 eSpawner.entityCount[event.enemy.id] -= 1
-                print(event.enemy)
+
 
 
             #quitting
@@ -87,7 +88,7 @@ def main():
         if shield:
             if player.dash > 5:
                 shield.position = player.position
-                shield.rotation = player.rotation
+                shield.offsetAngle = player.rotation
                 shield.kb = player.charge * 37 + 1000
             else:
                 shield.kill()
@@ -117,9 +118,11 @@ def main():
                 p = enemyCols[e][0]
                 if p not in usedProj:
                     e.damage(p.atk, p)
-                    print(p.pierce)
-                    if p.pierce == None:
-                        pass
+
+                    if p == shield:
+                        shield.hitCount += 1
+                        player.hp = math.floor(clamp(player.hp + shield.hitCount/20 , 0, 50))
+    
                     elif p.pierce <= 0:
                         usedProj.append(p)
                         p.kill()
@@ -135,7 +138,7 @@ def main():
             if player.hp == 0:
                 run = False
                 
-
+        print(player.hp)
 
         #--Rendering--
 
