@@ -20,8 +20,9 @@ class Player(Entity):
         self.acceleration = 2200
         self.friction = 1500
 
-        self.hp = 20
+        self.hp = 50
         self.invincTime = 1000
+        self.shield = None
 
         self.charge = 0
         self.dash = 0
@@ -55,6 +56,8 @@ class Player(Entity):
            
             self.die()
 
+
+
     def update(self, camPos, delta):
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
@@ -75,17 +78,19 @@ class Player(Entity):
             self.wasPressed = True
         else:
             if self.wasPressed:
-                pygame.event.post(pygame.event.Event(self.event))
                 self.dash = self.charge
+                pygame.event.post(pygame.event.Event(self.event))
                 
             else:
                 self.charge = 0
             self.wasPressed = False
 
-        if self.dash > 10:
+        if self.dash > 5:
             #self.dash = clamp(self.dash - 18 * delta, 0, 600)
-            self.dash *=0.97
-            self.velocity = (self.mouseDir * -self.dash)*25 + self.direction * (self.maxSpeed - 100)
+            self.dash *=0.96
+            self.velocity = (self.mouseDir * -self.dash)*27 + self.direction * (self.maxSpeed - 100)
+ 
+
 
         if self.direction == [0, 0]:
             self.applyFriction(delta)

@@ -7,6 +7,7 @@ import random
 
 from player import Player
 from playerProj1 import PlayerProj1
+from shieldProj import ShieldProj
 from camera import Camera
 from enemySpawner import EnemySpawner
 
@@ -41,6 +42,7 @@ def main():
     player = Player(PLAYERFIRE)
     playerCam = Camera()
     playerCam.position += (HWIDTH, HHIEGHT)
+    shield = None
 
     #setup groups
     projectiles = pygame.sprite.Group()
@@ -58,7 +60,10 @@ def main():
             if event.type == PLAYERFIRE:
                 bal = PlayerProj1(player.rotation, player.position.copy(), player.charge)
                 projectiles.add(bal)
-            
+                if player.dash > 5 and shield == None:
+                    shield = ShieldProj(player.rotation, player.position)
+                    projectiles.add(shield)
+                
             elif event.type == SPAWNENEMY:
     
                 erm = Vector2(1000, 0).rotate(random.uniform(0, 360.0)) + player.position
@@ -79,6 +84,15 @@ def main():
     
         
         player.update(playerCam.position, delta)
+        if shield:
+            if player.dash > 5:
+                shield.position = player.position
+                shield.rotation = player.rotation
+                shield.kb = player.charge * 37 + 1000
+            else:
+                shield.kill()
+                shield = None
+
         enemys.update(playerCam.position, player.rect.center, delta)
         projectiles.update(playerCam.position, delta)
 
@@ -137,11 +151,15 @@ def main():
             pPos = Vector2(projectile.rect.topleft)
             if abs(pPos.x - HWIDTH) <= WIDTH and abs(pPos.y - HHIEGHT) <= HEIGHT:
                 blitList.append((projectile.image, pPos))
+        
 
         #parralax BG
         screen.blit(BACKGROUND, (playerCam.position.x %256 - HWIDTH, playerCam.position.y %256 - HHIEGHT))
 
         screen.blits(blitList)
+
+        if shield:
+            screen.blit(shield.image, shield.rect.topleft)
 
         screen.blit(player.image, player.rect)
         pygame.display.update()
