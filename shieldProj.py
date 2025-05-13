@@ -7,15 +7,15 @@ class ShieldProj(Projectile):
     def __init__(self, angle, pos):
         super().__init__(angle, pos)
         self.atk = 4
-        self.kb = 1000
+        self.kb = 1200
         self.pierce = None
         self.sprite = pygame.Surface((48, 48))
-        self.radius = 32
+        self.radius = 40
         self.sprite.fill((20, 200, 50, 100))
         self.offsetAngle = 0
-        self.position = pos + Vector2(-24, 0).rotate(-self.offsetAngle)
+        self.position = pos + Vector2(-32, 0).rotate(-self.offsetAngle)
         self.hitCount = 0
 
     def update(self, camPos, delta):
-        self.position = self.position + Vector2(-24, 0).rotate(-self.offsetAngle)
+        self.position = self.position + Vector2(-32, 0).rotate(-self.offsetAngle)
         self.updateImage(camPos)

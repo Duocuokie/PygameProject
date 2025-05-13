@@ -49,7 +49,7 @@ def main():
     enemys = pygame.sprite.Group()
 
     
-    pygame.time.set_timer(SPAWNENEMY, 500)
+    pygame.time.set_timer(SPAWNENEMY, 1000)
     #main loop
     run = True
     while run:
@@ -58,8 +58,8 @@ def main():
 
             #spawn projectile  needs rework
             if event.type == PLAYERFIRE:
-                bal = PlayerProj1(player.rotation, player.position.copy(), player.charge)
-                projectiles.add(bal)
+                Proj = PlayerProj1(player.rotation, player.position.copy(), player.charge)
+                projectiles.add(Proj)
                 if player.dash > 5 and shield == None:
                     shield = ShieldProj(player.rotation, player.position)
                     projectiles.add(shield)
@@ -121,7 +121,7 @@ def main():
 
                     if p == shield:
                         shield.hitCount += 1
-                        player.hp = math.floor(clamp(player.hp + shield.hitCount/20 , 0, 50))
+                        player.hp = math.floor(clamp(player.hp + shield.hitCount/16 , 0, 50))
     
                     elif p.pierce <= 0:
                         usedProj.append(p)
@@ -152,7 +152,7 @@ def main():
 
         for projectile in projectiles:
             pPos = Vector2(projectile.rect.topleft)
-            if abs(pPos.x - HWIDTH) <= WIDTH and abs(pPos.y - HHIEGHT) <= HEIGHT:
+            if abs(pPos.x - HWIDTH) <= WIDTH and abs(pPos.y - HHIEGHT) <= HEIGHT and projectile != shield:
                 blitList.append((projectile.image, pPos))
         
 
@@ -162,7 +162,7 @@ def main():
         screen.blits(blitList)
 
         if shield:
-            screen.blit(shield.image, shield.rect.topleft)
+            pygame.draw.circle(screen, (20, 200, 50, 100), shield.rect.center, 40)
 
         screen.blit(player.image, player.rect)
         pygame.display.update()

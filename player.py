@@ -16,9 +16,9 @@ class Player(Entity):
         self.direction = Vector2(0, 0)
         self.mouseDir = [0, 0]
 
-        self.maxSpeed = 410
-        self.acceleration = 2200
-        self.friction = 1500
+        self.maxSpeed = 425
+        self.acceleration = 2300
+        self.friction = 1400
 
         self.hp = 50
         self.invincTime = 1000
@@ -73,7 +73,7 @@ class Player(Entity):
         
 
         if mouse[0]:
-            self.charge += 15 * delta
+            self.charge += 17 * delta
             self.wasPressed = True
         else:
             if self.wasPressed:
@@ -86,8 +86,8 @@ class Player(Entity):
 
         if self.dash > 5:
             #self.dash = clamp(self.dash - 18 * delta, 0, 600)
-            self.dash *=0.96
-            self.velocity = (self.mouseDir * -self.dash)*27 + self.direction * (self.maxSpeed - 100)
+            self.dash *=0.965
+            self.velocity = (self.mouseDir * -self.dash)*28 + self.direction * (self.maxSpeed - 100)
  
 
 
