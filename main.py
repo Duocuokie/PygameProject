@@ -37,7 +37,7 @@ clock = pygame.time.Clock()
 eSpawner = EnemySpawner(ENEMYDIE)
 
 def main():
-
+    pygame.display.toggle_fullscreen()
     #Setup player
     player = Player(PLAYERFIRE)
     playerCam = Camera()
@@ -110,7 +110,7 @@ def main():
                     e.softCollide(enemySoftCols[0])
                 elif len(enemySoftCols) > 1:
                     e.softCollide(enemySoftCols[1])
-        #Enemy vs Player Projectiles
+        #Enemy vs Player Projectilesddds
         enemyCols = pygame.sprite.groupcollide(enemys, projectiles, False, False, pygame.sprite.collide_circle_ratio(1.25))
         if enemyCols:
             usedProj = []
@@ -147,8 +147,21 @@ def main():
         #only blits if on screen
         for enemy in enemys:
             ePos = Vector2(enemy.rect.topleft)
+
+            ePlayerDist = enemy.position - player.position
+            if abs(ePlayerDist[0]) > 1500:
+                sign = math.copysign(1, ePlayerDist[0])
+                enemy.position.x += -sign * 3000
+            if abs(ePlayerDist[1]) > 1500:
+                sign = math.copysign(1, ePlayerDist[1])
+                enemy.position.y += -sign * 3000
+
             if abs(ePos.x - HWIDTH) <= WIDTH and abs(ePos.y - HHIEGHT) <= HEIGHT:
                 blitList.append((enemy.image, ePos))
+            
+
+
+
 
         for projectile in projectiles:
             pPos = Vector2(projectile.rect.topleft)
