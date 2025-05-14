@@ -20,6 +20,10 @@ class GameObject(pygame.sprite.Sprite):
     def updateImage(self, camPos):
         prevCenter = self.position
         self.image = self.sprite.copy()
+        if self.scale != [1, 1]:
+            newSize = [int(self.scale[0] * self.sprite.get_width()), int(self.scale[1] * self.sprite.get_height())]
+            
+            self.image = pygame.transform.scale(self.image, newSize)
         if self.rotation != 0:
             self.image = pygame.transform.rotate(self.image, self.rotation)
         self.rect = self.image.get_rect()

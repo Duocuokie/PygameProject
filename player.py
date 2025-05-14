@@ -12,6 +12,7 @@ class Player(Entity):
         super().__init__()
         self.sprite = PLAYERIMAGE
         self.radius = 12
+        
 
         self.direction = Vector2(0, 0)
         self.mouseDir = [0, 0]
@@ -50,6 +51,7 @@ class Player(Entity):
             self.hp = clamp(self.hp -  dmg, 0, 99999)
             dmgDir = Vector2(damager.position - self.position).normalize()
             self.velocity += dmgDir * -damager.kb * self.kbResist
+            self.charge = 0
             
         if self.hp == 0: 
            
@@ -84,10 +86,13 @@ class Player(Entity):
                 self.charge = 0
             self.wasPressed = False
 
+        self.scale = [1 + self.charge/32, 1 + self.charge/32]
+        self.radius = 12 * self.scale[0]
+
         if self.dash > 5:
             #self.dash = clamp(self.dash - 18 * delta, 0, 600)
-            self.dash *=0.965
-            self.velocity = (self.mouseDir * -self.dash)*28 + self.direction * (self.maxSpeed - 100)
+            self.dash *=0.967
+            self.velocity = (self.mouseDir * -self.dash)*25 + self.direction * (self.maxSpeed - 100)
  
 
 

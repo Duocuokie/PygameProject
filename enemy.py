@@ -41,7 +41,7 @@ class Enemy(Entity):
         if scDir == Vector2(0, 0):
             scDir = Vector2(1, 0).rotate(random.uniform(0, 360.0))
         else: scDir.normalize()
-        self.velocity += -scDir * 8
+        self.velocity += -scDir * 6
 
     def die(self):
         pygame.event.post(pygame.event.Event(self.event, {"enemy" : self}))

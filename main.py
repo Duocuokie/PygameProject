@@ -10,7 +10,7 @@ from playerProj1 import PlayerProj1
 from shieldProj import ShieldProj
 from camera import Camera
 from enemySpawner import EnemySpawner
-
+from healthBar import HealthBar
 
 pygame.init()
 
@@ -34,15 +34,17 @@ pygame.display.set_caption("Game")
 clock = pygame.time.Clock()
 
 
-eSpawner = EnemySpawner(ENEMYDIE)
 
 def main():
-    pygame.display.toggle_fullscreen()
+
     #Setup player
     player = Player(PLAYERFIRE)
     playerCam = Camera()
     playerCam.position += (HWIDTH, HHIEGHT)
     shield = None
+
+    eSpawner = EnemySpawner(ENEMYDIE)
+    pHealthBar = HealthBar((16, 16))
 
     #setup groups
     projectiles = pygame.sprite.Group()
@@ -56,7 +58,6 @@ def main():
         delta = Clock.tick(FPS)/1000
         for event in pygame.event.get():
 
-            #spawn projectile  needs rework
             if event.type == PLAYERFIRE:
                 Proj = PlayerProj1(player.rotation, player.position.copy(), player.charge)
                 projectiles.add(Proj)
@@ -98,8 +99,9 @@ def main():
         projectiles.update(playerCam.position, delta)
 
         #setting camera to go between player and mouse
-        target = (player.position * 3 + Vector2(pygame.mouse.get_pos() - Vector2(HWIDTH, HHIEGHT) + player.position))/4
+        target = (player.position * 4 + Vector2(pygame.mouse.get_pos() - Vector2(HWIDTH, HHIEGHT) + player.position))/5
         playerCam.update(target, (HWIDTH, HHIEGHT))
+        pHealthBar.update(player.hp)
 
         #--Collisions--
         #enemy soft collision
@@ -110,7 +112,7 @@ def main():
                     e.softCollide(enemySoftCols[0])
                 elif len(enemySoftCols) > 1:
                     e.softCollide(enemySoftCols[1])
-        #Enemy vs Player Projectilesddds
+        #Enemy vs Player Projectiles
         enemyCols = pygame.sprite.groupcollide(enemys, projectiles, False, False, pygame.sprite.collide_circle_ratio(1.25))
         if enemyCols:
             usedProj = []
@@ -121,7 +123,7 @@ def main():
 
                     if p == shield:
                         shield.hitCount += 1
-                        player.hp = math.floor(clamp(player.hp + shield.hitCount/16 , 0, 50))
+                        player.hp = math.floor(clamp(player.hp + shield.hitCount/24 , 0, 50))
     
                     elif p.pierce <= 0:
                         usedProj.append(p)
@@ -138,7 +140,7 @@ def main():
             if player.hp == 0:
                 run = False
                 
-        print(player.hp)
+        #print(player.hp)
 
         #--Rendering--
 
@@ -147,32 +149,22 @@ def main():
         #only blits if on screen
         for enemy in enemys:
             ePos = Vector2(enemy.rect.topleft)
-
-            ePlayerDist = enemy.position - player.position
-            if abs(ePlayerDist[0]) > 1500:
-                sign = math.copysign(1, ePlayerDist[0])
-                enemy.position.x += -sign * 3000
-            if abs(ePlayerDist[1]) > 1500:
-                sign = math.copysign(1, ePlayerDist[1])
-                enemy.position.y += -sign * 3000
-
             if abs(ePos.x - HWIDTH) <= WIDTH and abs(ePos.y - HHIEGHT) <= HEIGHT:
                 blitList.append((enemy.image, ePos))
-            
-
-
-
 
         for projectile in projectiles:
             pPos = Vector2(projectile.rect.topleft)
             if abs(pPos.x - HWIDTH) <= WIDTH and abs(pPos.y - HHIEGHT) <= HEIGHT and projectile != shield:
                 blitList.append((projectile.image, pPos))
+
         
 
         #parralax BG
         screen.blit(BACKGROUND, (playerCam.position.x %256 - HWIDTH, playerCam.position.y %256 - HHIEGHT))
 
         screen.blits(blitList)
+
+        screen.blit(pHealthBar.image, pHealthBar.rect)
 
         if shield:
             pygame.draw.circle(screen, (20, 200, 50, 100), shield.rect.center, 40)
