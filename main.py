@@ -40,7 +40,6 @@ clock = pygame.time.Clock()
 
 
 def main():
-    #pygame.display.toggle_fullscreen()
     #Setup player
     player = Player(PLAYERFIRE)
     playerCam = Camera()
@@ -165,7 +164,7 @@ def main():
 
         blitList = []
 
-        #only blits if on screen
+        #only blit if on screen
         for enemy in enemys:
             ePos = Vector2(enemy.rect.topleft)
 
