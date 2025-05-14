@@ -14,13 +14,13 @@ class Projectile(GameObject):
 
         self.rect.center = pos
         self.position = pos
-        self.speed = 500
+        self.speed = 360
         self.angle = angle
         self.velocity = Vector2(self.speed, 0).rotate(-angle)
 
         self.atk = 5
         self.pierce = 0
-        self.kb = 600
+        self.kb = 480
         self.layer = 0
 
         

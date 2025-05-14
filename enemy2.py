@@ -10,11 +10,12 @@ class Enemy2(Enemy):
         self.sprite = pygame.Surface((64, 64))
         self.sprite.fill((190, 10, 13))
         self.radius = 28
-        self.maxSpeed = 210
+        self.maxSpeed = 160
         self.acceleration = 2500
         self.hp = 60
 
-        self.atk = 20
+        self.atk = 17
 
         self.kbResist = 0.8
-        self.kb = 1350
+        self.kb = 1050
+        self.score = 25

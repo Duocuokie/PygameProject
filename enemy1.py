@@ -10,8 +10,8 @@ class Enemy1(Enemy):
 
 
         
-        self.maxSpeed = 270
+        self.maxSpeed = 220
         self.acceleration = 2500
         self.hp = 25
 
-        self.kb = 1200
+        self.kb = 900
