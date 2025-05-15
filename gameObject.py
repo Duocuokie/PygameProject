@@ -17,6 +17,8 @@ class GameObject(pygame.sprite.Sprite):
         self.camPos = Vector2(0,0)
 
 
+    #updates the objects sprite
+    #chests for rotation scale and camera position
     def updateImage(self, camPos):
         prevCenter = self.position
         self.image = self.sprite.copy()

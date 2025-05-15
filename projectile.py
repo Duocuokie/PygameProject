@@ -27,4 +27,5 @@ class Projectile(GameObject):
     def update(self, camPos, delta):
         #self.rect.move_ip(self.velocity)
         self.position += self.velocity * delta
+        self.rotation = self.angle
         self.updateImage(camPos)

@@ -4,6 +4,8 @@ from pygame.math import *
 from enemy import Enemy
 from enemyProj1 import EnemyProj1
 
+#shoots projectiles at player
+
 class Enemy4(Enemy):
     def __init__(self, pos, event, fireEvent):
         super().__init__(pos, event)
@@ -22,6 +24,7 @@ class Enemy4(Enemy):
         self.acceleration = 2000
         self.friction = 2000
         self.hp = 25
+        #for when to fire a projectile
         self.fireEvent = fireEvent
         self.kb = 900
 
@@ -29,6 +32,7 @@ class Enemy4(Enemy):
         if Vector2(self.rect.center).distance_squared_to(playerPos) > 40000:
             self.findPlayer(playerPos)
             self.applyAccel(self.direction, delta)
+        #only fires when off cooldown
         elif self.lastFire + self.cooldown < pygame.time.get_ticks():
             self.applyFriction(delta)
             self.lastFire = pygame.time.get_ticks()

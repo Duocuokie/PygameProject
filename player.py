@@ -3,7 +3,7 @@ from pygame.locals import *
 from pygame.math import *
 import math
 from entity import Entity
-
+import audio
 
 PLAYERIMAGE = pygame.image.load("textures/Player.png")
 
@@ -46,6 +46,7 @@ class Player(Entity):
 
     def damage(self, dmg, damager):
         if self.lastHitTime + self.invincTime < pygame.time.get_ticks():
+            audio.SfxObjs[2].play()
             pygame.time.wait(50)
             self.lastHitTime = pygame.time.get_ticks()
             self.hp = clamp(self.hp -  dmg, 0, 99999)
@@ -54,7 +55,7 @@ class Player(Entity):
             self.charge = 0
             
         if self.hp == 0: 
-           
+            audio.SfxObjs[3].play()
             self.die()
 
 
@@ -76,10 +77,14 @@ class Player(Entity):
 
         if mouse[0]:
             self.charge += 19 * delta
+            if not self.wasPressed:
+                audio.SfxObjs[0].play()
             self.wasPressed = True
         else:
             if self.wasPressed:
                 self.dash = self.charge
+                audio.SfxObjs[0].stop()
+                audio.SfxObjs[1].play()
                 pygame.event.post(pygame.event.Event(self.event))
                 
             else:
@@ -91,7 +96,7 @@ class Player(Entity):
 
         if self.dash > 5:
             #self.dash = clamp(self.dash - 18 * delta, 0, 600)
-            self.dash *=0.967
+            self.dash *= 1 - 2 * delta
             self.velocity = (self.mouseDir * -self.dash)*23 + self.direction * (self.maxSpeed - 100)
  
 

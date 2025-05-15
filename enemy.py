@@ -5,6 +5,8 @@ import math
 import random
 from entity import Entity
 
+#base enemy class
+
 class Enemy(Entity):
     def __init__(self, pos, event):
         super().__init__()
@@ -27,14 +29,17 @@ class Enemy(Entity):
 
         self.kb = 1000
         self.score = 10
+        #event for when it dies
         self.event = event
 
+    #gets the direction to the player from the enemy
     def findPlayer(self, playerPos):
         if Vector2(self.rect.center).distance_squared_to(Vector2(playerPos)) > 0:
             self.direction = (Vector2(playerPos) - Vector2(self.rect.center)).normalize()
         else:
             self.direction = Vector2(0,0)
         self.playerAngle = -math.degrees(math.atan2(self.direction[1], self.direction[0]))
+        self.rotation = self.playerAngle
 
     def applyAccel(self, dir, delta):
         self.velocity = self.velocity.move_towards(dir * self.maxSpeed, self.acceleration * delta)
@@ -43,6 +48,7 @@ class Enemy(Entity):
     def applyFriction(self, delta):
         self.velocity = self.velocity.move_towards(Vector2(0, 0), self.friction * delta)
 
+    #changes velocity to move away from ther enemies
     def softCollide(self, enemy):
         scDir = Vector2(enemy.position - self.position)
         if scDir == Vector2(0, 0):

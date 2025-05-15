@@ -16,10 +16,11 @@ class Entity(GameObject):
         self.invincTime = 100
         self.lastHitTime = 0
 
+        #movement every frame
         self.velocity = Vector2(0.0, 0.0)
 
 
-
+    #takes away from hp when off cooldown
     def damage(self, dmg, damager):
         if self.lastHitTime + self.invincTime < pygame.time.get_ticks():
             self.lastHitTime = pygame.time.get_ticks()
