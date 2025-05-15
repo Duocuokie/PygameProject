@@ -11,7 +11,7 @@ enemyList = [Enemy1, Enemy2, Enemy3, Enemy4]
 
 class EnemySpawner():
     def __init__(self, dieEvent, fireEvent):
-        self.time = 70
+        self.time = 0
         self.capTime = 0
         self.entityCap = {
             0 : [5, 0, 0, 0],
