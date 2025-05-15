@@ -30,6 +30,8 @@ class Button():
                 self.image = self.sprites[1]
                 self.wasPresesed = False
         else:
+            if not mouseClick[0]:
+                self.wasPresesed = False
             self.image = self.sprites[0]
             
 

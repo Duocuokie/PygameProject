@@ -5,6 +5,8 @@ from projectile import Projectile
 
 SPRITE = pygame.image.load("textures/playerProj.png")
 
+# player projectile   scales based on charge
+
 class PlayerProj1(Projectile):
     def __init__(self, angle, pos, charge):
         super().__init__(angle, pos)

@@ -7,6 +7,8 @@ import audio
 
 PLAYERIMAGE = pygame.image.load("textures/Player.png")
 
+#player object
+
 class Player(Entity):
     def __init__(self, event):
         super().__init__()
@@ -31,19 +33,22 @@ class Player(Entity):
 
         self.event = event
 
+    #accelerates player to max speed
     def applyAccel(self, dir, delta):
         speed = self.maxSpeed
         accel = self.acceleration
+        #slows when charging
         if self.charge != 0 :
             accel = 900
             speed = clamp((speed - 200 - (self.charge**2)/4), 0, 99999) + 120
         self.velocity = self.velocity.move_towards(dir * speed,  accel * delta)
 
 
-
+    #stops player
     def applyFriction(self, delta):
         self.velocity = self.velocity.move_towards(Vector2(0, 0), self.friction * delta)
 
+    #hurts player
     def damage(self, dmg, damager):
         if self.lastHitTime + self.invincTime < pygame.time.get_ticks():
             audio.SfxObjs[2].play()
@@ -61,11 +66,13 @@ class Player(Entity):
 
 
     def update(self, camPos, delta):
+        #gets input
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
         if self.rect.center == pygame.mouse.get_pos():
             self.mouseDir = Vector2(1, 0)
         else:
+            #rotate to mouse
             self.mouseDir = (Vector2(pygame.mouse.get_pos()) - Vector2(self.rect.center)).normalize()
         self.rotation = -math.degrees(math.atan2(self.mouseDir[1], self.mouseDir[0]))
 
@@ -74,13 +81,14 @@ class Player(Entity):
         self.direction[1] = int(keys[K_s]) - int(keys[K_w])
 
         
-
+        #charging and attacking
         if mouse[0]:
             self.charge += 19 * delta
             if not self.wasPressed:
                 audio.SfxObjs[0].play()
             self.wasPressed = True
         else:
+            #release
             if self.wasPressed:
                 self.dash = self.charge
                 audio.SfxObjs[0].stop()
@@ -91,16 +99,17 @@ class Player(Entity):
                 self.charge = 0
             self.wasPressed = False
 
+        #increasing size
         self.scale = [1 + self.charge/32, 1 + self.charge/32]
         self.radius = 12 * self.scale[0]
 
+        #pushed player away from mouse
         if self.dash > 5:
-            #self.dash = clamp(self.dash - 18 * delta, 0, 600)
             self.dash *= 1 - 2 * delta
             self.velocity = (self.mouseDir * -self.dash)*23 + self.direction * (self.maxSpeed - 100)
  
 
-
+        #move direction
         if self.direction == [0, 0]:
             self.applyFriction(delta)
         else:

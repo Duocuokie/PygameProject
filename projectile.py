@@ -4,6 +4,8 @@ from pygame.math import *
 from gameObject import GameObject
 import time
 
+#projectile class
+
 class Projectile(GameObject):
     def __init__(self, angle, pos):
         super().__init__()

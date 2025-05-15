@@ -2,13 +2,14 @@ import pygame
 from pygame.locals import *
 from pygame.math import *
 
-
+#scoring object
 
 class Score():
     def __init__(self, font, highscore):
         self.score = 0
         self.highscore = highscore
         self.combo = 0
+        #float combo for more consistance calcuations
         self.fcombo = 0
 
         self.comboTime = 5000
@@ -16,22 +17,26 @@ class Score():
 
         self.font = font
         self.image = pygame.Surface((512, 128), SRCALPHA)
-
+    
+    #increases score based on combo
     def updateScore(self, newScore):
         self.score += int(newScore * (self.combo / 10 + 1))
         if self.score > self.highscore:
             self.highscore = self.score
             return self.highscore
-
+    #increasaes combo
     def updateCombo(self):
         self.combo += 1
         self.fcombo = self.combo
         self.lastHit = pygame.time.get_ticks()
 
     def update(self, delta):
+        #slowly lose combo
         if self.lastHit + self.comboTime <  pygame.time.get_ticks():
             self.fcombo = clamp(self.fcombo - (5 * delta), 0, 99999)
             self.combo = int(self.fcombo)
+
+        #text
         self.image.fill((0, 0, 0, 0))
 
         highText = self.font.render(f"{self.highscore}", (255, 255, 255), size = 32)
