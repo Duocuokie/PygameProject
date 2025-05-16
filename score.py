@@ -23,7 +23,7 @@ class Score():
         self.score += int(newScore * (self.combo / 10 + 1))
         if self.score > self.highscore:
             self.highscore = self.score
-            return self.highscore
+        return self.highscore
     #increasaes combo
     def updateCombo(self):
         self.combo += 1

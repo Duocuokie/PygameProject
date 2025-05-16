@@ -5,7 +5,7 @@ from projectile import Projectile
 
 SPRITE = pygame.image.load("textures/shield.png")
 
-#player sheild
+#player shield
 
 class ShieldProj(Projectile):
     def __init__(self, angle, pos):

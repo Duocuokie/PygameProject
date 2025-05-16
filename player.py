@@ -19,7 +19,7 @@ class Player(Entity):
         self.direction = Vector2(0, 0)
         self.mouseDir = [0, 0]
 
-        self.maxSpeed = 325
+        self.maxSpeed = 350
         self.acceleration = 2300
         self.friction = 1400
 
@@ -50,15 +50,16 @@ class Player(Entity):
 
     #hurts player
     def damage(self, dmg, damager):
-        if self.lastHitTime + self.invincTime < pygame.time.get_ticks():
-            audio.SfxObjs[2].play()
-            pygame.time.wait(50)
-            self.lastHitTime = pygame.time.get_ticks()
-            self.hp = clamp(self.hp -  dmg, 0, 99999)
-            dmgDir = Vector2(damager.position - self.position).normalize()
-            self.velocity += dmgDir * -damager.kb * self.kbResist
-            self.charge = 0
-            
+        if self.dash < 20:
+            if self.lastHitTime + self.invincTime < pygame.time.get_ticks():
+                audio.SfxObjs[2].play()
+                pygame.time.wait(50)
+                self.lastHitTime = pygame.time.get_ticks()
+                self.hp = clamp(self.hp -  dmg, 0, 99999)
+                dmgDir = Vector2(damager.position - self.position).normalize()
+                self.velocity += dmgDir * -damager.kb * self.kbResist
+                self.charge = 0
+                
         if self.hp == 0: 
             audio.SfxObjs[3].play()
             self.die()
@@ -83,7 +84,7 @@ class Player(Entity):
         
         #charging and attacking
         if mouse[0]:
-            self.charge += 19 * delta
+            self.charge += 20 * delta
             if not self.wasPressed:
                 audio.SfxObjs[0].play()
             self.wasPressed = True
@@ -106,7 +107,7 @@ class Player(Entity):
         #pushed player away from mouse
         if self.dash > 5:
             self.dash *= 1 - 2 * delta
-            self.velocity = (self.mouseDir * -self.dash)*23 + self.direction * (self.maxSpeed - 100)
+            self.velocity = (self.mouseDir * -self.dash)*22 + self.direction * (self.maxSpeed - 100)
  
 
         #move direction

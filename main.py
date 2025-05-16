@@ -79,13 +79,16 @@ clock = pygame.time.Clock()
 
 #manages highscore saved in stats.txt
 def loadHighscore():
-    with open("stats.txt") as f:
-        h = int(f.read())
-        if h == None:
-            saveHighscore(0)
-            return(0)
-        else:
-            return(h)
+    with open("stats.txt", 'r') as f:
+        h = f.read()
+    try:
+        h = int(h)
+    except:
+        with open("stats.txt", "w") as f:
+            f.write(str(0))
+        h = 0
+
+    return(h)
     
 def saveHighscore(score):
     
@@ -199,7 +202,6 @@ def game():
 
                 #quitting
                 elif event.type == pygame.QUIT:
-                    saveHighscore(highscore)
                     action = "quit"
                     run = False 
 
@@ -248,7 +250,7 @@ def game():
                             shield.hitCount += 1
                             highscore = gameScore.updateScore(1)
                             #heals player
-                            player.hp = math.floor(clamp(player.hp + shield.hitCount/26 , 0, 50))
+                            player.hp = math.floor(clamp(player.hp + shield.hitCount/24 , 0, 50))
                         #manages piercing
                         elif p.pierce <= 0:
                             usedProj.append(p)
@@ -318,7 +320,8 @@ def game():
 
             #setsup death screen
             if player.hp == 0:
-                saveHighscore(highscore)
+                if highscore > loadHighscore():
+                    saveHighscore(highscore)
                 pHealthBar.update(player.hp)
                 screenSurf.blit(pHealthBar.image, pHealthBar.rect)
                 deathImage = screenSurf.copy()

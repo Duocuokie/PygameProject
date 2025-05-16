@@ -3,6 +3,8 @@ import pygame.mixer
 
 pygame.mixer.init()
 
+pygame.mixer.set_num_channels(32)
+
 #manages all the audio
 
 #sound effects list

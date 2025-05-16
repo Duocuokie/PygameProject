@@ -5,14 +5,14 @@ from enemy import Enemy
 from enemyProj1 import EnemyProj1
 
 #shoots projectiles at player
+SPRITE = pygame.image.load("textures/enemy4.png")
 
 class Enemy4(Enemy):
     def __init__(self, pos, event, fireEvent):
         super().__init__(pos, event)
+        self.sprite = SPRITE
         self.id = 3
 
-        self.sprite = pygame.Surface((32, 32))
-        self.sprite.fill((190, 20, 210))
         self.radius = 12
 
         self.cooldown = 1750
